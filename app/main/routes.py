@@ -7,8 +7,10 @@ from flask_login import (
     login_user,
     login_required,
 )
+from app.models.user_auth.user_auth import GameUser
 
 
 @bp.route("/home")
 def home():
-    return render_template("index.html")
+    users = GameUser.query.all()
+    return render_template("user_auth/index.html", users=users)

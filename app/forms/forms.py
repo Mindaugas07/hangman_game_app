@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import SubmitField, BooleanField, StringField, PasswordField
 from wtforms.validators import DataRequired, ValidationError, EqualTo, Email
 from flask_wtf.file import FileField, FileAllowed
-from app.models.user_auth import GameUser
+from app.models.user_auth.user_auth import GameUser
 
 
 class RegistrationForm(FlaskForm):

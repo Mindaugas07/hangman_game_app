@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>The hangman!</h1>
+<h2>Your word is {{game_word}}</h2>
+<h2>Guess your letter: </h2>
+<img src={{game_picture}}>
+<form role="form" action="" method="POST">
+    <div class="form-group">
+        {% for letter in all_letters%}
+        <input type="submit" name="letter" value={{letter}}>
+        {% endfor %}
+    </div>
+    <h2>{{selected_word}}</h2>
+</form>
+
+
+
+
+
+{% endblock %}

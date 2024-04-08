@@ -2,7 +2,7 @@ from flask import Flask
 
 from config import Config
 from app.extensions import db
-from app.models.user_auth import GameUser
+from app.models.user_auth.user_auth import GameUser
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail
 from flask_login import LoginManager
@@ -23,6 +23,10 @@ def create_app(config_class=Config):
     from app.user_auth import bp as user_bp
 
     app.register_blueprint(user_bp)
+
+    from app.game import bp as game_bp
+
+    app.register_blueprint(game_bp)
 
     login_manager = LoginManager(app)
     login_manager.login_view = "user_auth.login"

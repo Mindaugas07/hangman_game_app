@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, flash, request, Flask
 from app.user_auth import bp
 from app.extensions import db
-from app.models.user_auth import GameUser
+from app.models.user_auth.user_auth import GameUser
 
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail
@@ -12,7 +12,7 @@ from flask_login import (
     login_user,
     login_required,
 )
-from app.models.user_auth import GameUser
+
 
 app = Flask(__name__)
 
@@ -61,7 +61,7 @@ def register():
         )
         db.session.add(user)
         db.session.commit()
-        flash("You succusesfuly registered! You may login.", "succes")
+        flash("You successfully registered!", "succes")
         return redirect(url_for("user_auth.index"))
     return render_template("user_auth/register.html", title="Register", form=form)
 
@@ -82,7 +82,7 @@ def login():
                 else redirect(url_for("user_auth.index"))
             )
         else:
-            flash("Login was unsuccessfull. Check e-mail and password", "danger")
+            flash("Login was unsuccessfull. Check e-mail and password.", "danger")
     return render_template("user_auth/login.html", title="Login", form=form)
 
 
