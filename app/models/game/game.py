@@ -25,6 +25,7 @@ list_of_words = [
 
 class HangmanGame:
     MAX_GUESSES = 6
+    BAD_GUESSES = 0
 
     def __init__(self, used_letters: Set[str]) -> None:
         self.used_letters = used_letters
@@ -52,11 +53,8 @@ class HangmanGame:
                 current_letters.append("_")
         return " ".join(current_letters)
 
-    def game_over(
-        self,
-        bad_guesses: int,
-    ):
-        if bad_guesses == self.MAX_GUESSES:
+    def game_over(self):
+        if self.BAD_GUESSES == self.MAX_GUESSES:
             return True
         if set(self.game_word) <= self.used_letters:
             return True
