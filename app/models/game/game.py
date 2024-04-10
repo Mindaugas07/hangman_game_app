@@ -44,6 +44,12 @@ class HangmanGame:
     def join_guessed_letters(self) -> str:
         return " ".join(sorted(self.used_letters))
 
+    def not_used_letters(self, guessed_letters) -> str:
+        full_string = string.ascii_lowercase
+        for letter in guessed_letters:
+            full_string = full_string.replace(letter, "")
+        return full_string
+
     def guessing_word(self) -> str:
         current_letters = []
         for letter in self.game_word:

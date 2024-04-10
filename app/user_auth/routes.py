@@ -90,3 +90,10 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for("main.home"))
+
+
+@bp.route("/<user>")
+# @login_required
+def user_page(user):
+    user_from_db = GameUser.query.filter_by(name=user).first()
+    return render_template("user_auth/user_page.html", user=user_from_db)

@@ -8,10 +8,15 @@
 
 <form role="form" action="" method="POST">
     <div class="form-group">
-
+        {% if not not_used_letters%}
+        {% for letter in not_used_letters_two%}
+        <input type="submit" name="letter" value={{letter}}>
+        {% endfor %}
+        {%else%}
         {% for letter in not_used_letters%}
         <input type="submit" name="letter" value={{letter}}>
         {% endfor %}
+        {%endif%}
     </div>
 
 </form>

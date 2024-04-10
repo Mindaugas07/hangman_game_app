@@ -16,13 +16,18 @@ def game():
     game_status = None
 
     guessed_letters = new_game.join_guessed_letters()
-    not_used_letters = string.ascii_lowercase
+    not_used_letters = list(string.ascii_lowercase)
+
     if request.method == "POST":
         print(request.form["letter"])
         player_guess = request.form["letter"]
         new_game.used_letters.add(player_guess)
         guessed_letters = new_game.join_guessed_letters()
-
+        # print(f"player guess is {player_guess}")
+        # print(f"not guessed letters is {not_used_letters}")
+        # print(f"used letters is {guessed_letters}")
+        not_used_letters = new_game.not_used_letters(guessed_letters)
+        # print(not_used_letters)
         if player_guess in new_game.game_word:
             print("Great guess!")
         else:
@@ -33,11 +38,9 @@ def game():
     selected_word = new_game.guessing_word()
 
     if new_game.game_over():
-        game_status = "Sorry you have just lost!"
+        game_status = """Sorry you have lost the game!
+        Do you wat to play again?"""
         print("Sorry, you lost!")
-    # elif set(new_game.game_word) == new_game.used_letters :
-    #     game_status = "Congratulation! You won the game!"
-    #     print("Congratulation! You won the game!")
 
     return render_template(
         "game/index.html",
