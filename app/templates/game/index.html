@@ -2,9 +2,9 @@
 
 {% block content %}
 
-<h1>The hangman!</h1>
-<h2>Your word is {{selected_word}}</h2>
-<h2>Guess your letter: </h2>
+<h1>Hey {{current_user.name}}, welcome to hangman game!</h1>
+<h2>Your word is: {{selected_word}}</h2>
+<h2>Guess a letter: </h2>
 
 <form role="form" action="" method="POST">
     <div class="form-group">
@@ -25,9 +25,9 @@
 {% if game_status %}
 <h1>{{game_status}}</h1>
 {% endif%}
-<form role="form" action="" method="POST">
+<form role="form" action="/game" method="POST">
     <div class="form-group">
-        <input type="submit" name="new game" value="new game">
+        <input type="submit" name="start game" value="Start a new game">
     </div>
 
 

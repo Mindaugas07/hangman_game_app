@@ -1,10 +1,7 @@
 from random import choice
 from typing import Set
 import string
-
-# from hangman_draw import draw_hangman
-
-# from hangman_game_app.app.models.user_auth.user_auth import GameUser
+from app.models.user_auth.user_auth import GameUser
 
 list_of_words = [
     "lizards",
@@ -27,7 +24,7 @@ class HangmanGame:
     MAX_GUESSES = 6
     BAD_GUESSES = 0
 
-    def __init__(self, used_letters: Set[str]) -> None:
+    def __init__(self, user: GameUser, used_letters: Set[str]) -> None:
         self.used_letters = used_letters
         self.game_word = choice(list_of_words).strip()
 
@@ -65,31 +62,3 @@ class HangmanGame:
         if set(self.game_word) <= self.used_letters:
             return True
         return False
-
-
-# if __name__ == "__main__":
-#     # user = GameUser()
-#     new_game = HangmanGame(used_letters=set())
-#     bad_guesses = 0
-
-#     while not new_game.game_over(bad_guesses):
-#         draw_hangman(bad_guesses)
-#         print(f"Game word is: {new_game.guessing_word()}")
-#         print("Your guessed letters: " f"{new_game.join_guessed_letters()}\n")
-
-#         player_guess = new_game.player_input()
-#         if player_guess in new_game.game_word:
-#             print("Great guess!")
-#         else:
-#             print("Nope, it's not there.")
-#             bad_guesses += 1
-
-#         new_game.used_letters.add(player_guess)
-#         selected_word = new_game.guessing_word()
-
-#     draw_hangman(bad_guesses)
-#     if bad_guesses == HangmanGame.MAX_GUESSES:
-#         print("Sorry, you lost!")
-#     else:
-#         print("Congratulation! You won the game!")
-#     print(f"Your word was: {new_game.game_word}")
