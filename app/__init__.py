@@ -1,5 +1,4 @@
 from flask import Flask
-from pymongo import MongoClient
 from app.models.mongo.mongo import MongoDB
 
 from config import Config
@@ -8,6 +7,18 @@ from app.models.user_auth.user_auth import GameUser
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail
 from flask_login import LoginManager
+
+
+try:
+    game_db = MongoDB(
+        host="localhost",
+        port=27017,
+        db_name="games_data",
+        collection_name="games",
+    )
+
+except Exception as e:
+    print(f"Error: {str(e)}")
 
 
 def create_app(config_class=Config):
@@ -33,23 +44,6 @@ def create_app(config_class=Config):
     login_manager = LoginManager(app)
     login_manager.login_view = "user_auth.login"
     login_manager.login_message_category = "info"
-
-    client = MongoClient("mongodb://mongo:27017/")
-    db_mongo = client.mydatabase
-    collection = db_mongo.mycollection
-
-    try:
-        game_db = MongoDB(
-            host="localhost",
-            port=27017,
-            db_name="games_data",
-            collection_name="games",
-        )
-    except:
-        print("no db for you")
-        # def generate_data_base(1):
-        #     for _ in range(1):
-        #         self.create_random_person()
 
     @login_manager.user_loader
     def load_user(user_id):

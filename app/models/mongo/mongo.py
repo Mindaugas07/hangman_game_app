@@ -46,12 +46,7 @@ class MongoDB:
 
     def insert_many_document(self, document: Dict) -> List[str]:
         result = self.collection.insert_many(document)
-        # print(f"Printed result: {result}")
         return list(result.inserted_ids)
-
-    # def generate_data_base(self, numb_of_documents):
-    #     for _ in range(numb_of_documents):
-    #         self.create_random_person()
 
     def query_equal(
         self, field_name: str, value: Union[str, int, float, bool], parameter: Dict = {}
