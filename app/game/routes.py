@@ -60,6 +60,7 @@ def start_game():
             }
             result = game_db.collection.insert_one(document)
             print(f"Inserted document with ID: {result.inserted_id}")
+            not_used_letters = []
         else:
             game_status = f"""Sorry you lost!
                 The word was: '{new_game_obj.game_word}'.

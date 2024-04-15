@@ -1,14 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<span class="title">
-    <h1>{% block title %} User {% endblock %}</h1>
-</span>
-<div class="content">
-    <h2>{{current_user.name}}</h2>
-    <p>{{ user.name }}</p>
-    <p>{{ user.email }}</p>
 
+<div class="content">
+    {% if user_name%}
+    <h4>Username: <b>{{ user_name.name }}</b></h4>
+    <h4>User's e-mail: <b>{{ user_name.email }}</b></h4>
+    {%else%}
+    <p>No user with username '{{not_existing_user}}' exists!</p>
+    {%endif%}
 </div>
 
+<div>
+    {% if games_data%}
+    <h4>All played games:</h4>
+    {% for game in games_data%}
+    <p>On {{game["date"].date()}} {{game["time"]}} the word was '{{game["game word"]}}' and player {{game["game result"]}} the game.
+    </p>
+    {%else%}
+    <p> No played games by the user.</p>
+    {% endfor %}
+    {%endif%}
+</div>
 {% endblock %}
