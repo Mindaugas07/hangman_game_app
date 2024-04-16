@@ -44,7 +44,7 @@ def start_game():
     if new_game_obj.game_over():
         if "_" not in selected_word:
             game_status = f"""You won!!!"""
-            game_status_for_db = "win"
+            game_status_for_db = "won"
             current_username = current_user.name
             current_username_email = current_user.email
             current_date = datetime.now()
@@ -65,7 +65,7 @@ def start_game():
             game_status = f"""Sorry you lost!
                 The word was: '{new_game_obj.game_word}'.
                 Do you want to play again?"""
-            game_status_for_db = "loose"
+            game_status_for_db = "lost"
             current_username = current_user.name
             current_username_email = current_user.email
             current_date = datetime.now()

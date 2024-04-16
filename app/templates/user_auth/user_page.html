@@ -3,11 +3,11 @@
 {% block content %}
 
 <div class="content">
-    {% if user_name%}
-    <h4>Username: <b>{{ user_name.name }}</b></h4>
-    <h4>User's e-mail: <b>{{ user_name.email }}</b></h4>
+    {% if user_from_db%}
+    <h4>Username: <b>{{ user_from_db.name }}</b></h4>
+    <h4>User's e-mail: <b>{{ user_from_db.email }}</b></h4>
     {%else%}
-    <p>No user with username '{{not_existing_user}}' exists!</p>
+    <p>User with username '{{not_existing_user}}' doesn't exist!</p>
     {%endif%}
 </div>
 
@@ -15,7 +15,8 @@
     {% if games_data%}
     <h4>All played games:</h4>
     {% for game in games_data%}
-    <p>On {{game["date"].date()}} {{game["time"]}} the word was '{{game["game word"]}}' and player {{game["game result"]}} the game.
+    <p>On {{game["date"].date()}} {{game["time"]}} the word was
+        '{{game["game word"]}}' and player {{game["game result"]}} the game.
     </p>
     {%else%}
     <p> No played games by the user.</p>

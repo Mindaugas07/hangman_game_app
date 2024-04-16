@@ -6,9 +6,9 @@
 </span>
 <div class="content">
     <h2>Highest scores:</h2>
-    {% for user in users %}
+    {% for user in game_wins %}
     <div class="post">
-        <p><b>#{{ user.id }}</b></p>
+        <p><b>#{{ user }}</b></p>
         <p class="title">
             <b>
                 <a href="/{{user.name}}">

@@ -5,6 +5,7 @@ from app.models.user_auth.user_auth import GameUser
 from app.models.mongo.mongo import MongoDB
 from app import game_db
 
+
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail
 from flask_login import (
@@ -98,20 +99,17 @@ def logout():
 def user_page(app_user):
     try:
         user_from_db = GameUser.query.filter_by(name=app_user).first()
-
-        print(user_from_db.name)
-        user_email = str(user_from_db.email)
-        print(user_email)
         users_played_games = game_db.find_documents(
             {"user email": user_from_db.email}, {"_id": 0}
         )
-        print(users_played_games)
-
+        return render_template(
+            "user_auth/user_page.html",
+            user_from_db=user_from_db,
+            games_data=users_played_games,
+        )
     except:
-        print(f"No player exists with username '{app_user}'!")
-    return render_template(
-        "user_auth/user_page.html",
-        user_name=user_from_db,
-        not_existing_user=app_user,
-        games_data=users_played_games,
-    )
+        print(f"User with username '{app_user}' doesn't exist!")
+        return render_template(
+            "user_auth/user_page.html",
+            not_existing_user=app_user,
+        )
