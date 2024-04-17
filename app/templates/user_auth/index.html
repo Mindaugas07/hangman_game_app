@@ -1,25 +1,18 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<span class="title">
-    <h1>{% block title %} Game's {% endblock %}</h1>
-</span>
+
 <div class="content">
-    <h2>Highest scores:</h2>
+    <h2>Highest scorers:</h2>
     {% for user in game_wins %}
-    <div class="post">
-        <p><b>#{{ user }}</b></p>
-        <p class="title">
-            <b>
-                <a href="/{{user.name}}">
-                    {{ user.name }}
-                </a>
-            </b>
-        </p>
-        <div class="content">
-            <p>{{ user.email }}</p>
-        </div>
+    <p class="list-style">
+    <ol>
+        <li><a href="/{{user[0]}}">{{ user[0] }}</a><a> - {{ user[1] }} wins</a></li>
+
         <hr>
-    </div>
-    {% endfor %}
-    {% endblock %}
+    </ol>
+    </p>
+</div>
+{% endfor %}
+
+{% endblock %}

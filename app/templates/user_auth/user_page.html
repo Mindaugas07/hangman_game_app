@@ -18,9 +18,10 @@
     <p>On {{game["date"].date()}} {{game["time"]}} the word was
         '{{game["game word"]}}' and player {{game["game result"]}} the game.
     </p>
-    {%else%}
-    <p> No played games by the user.</p>
+
     {% endfor %}
+    {%else%}
+    <p> No games were played by the user.</p>
     {%endif%}
 </div>
 {% endblock %}

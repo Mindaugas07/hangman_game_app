@@ -6,8 +6,52 @@ from flask_login import login_required, current_user
 import string
 from app import game_db
 from datetime import datetime
+from typing import Dict
 
 app = Flask(__name__)
+
+
+def game_data_blueprint(
+    current_username: str,
+    current_username_email: str,
+    current_date: datetime,
+    current_time: datetime,
+    game_status_db: str,
+    game_word: str,
+) -> Dict:
+    return {
+        "userame": current_username,
+        "user email": current_username_email,
+        "date": current_date,
+        "time": current_time,
+        "game result": game_status_db,
+        "game word": game_word,
+    }
+
+
+def get_game_status_data(status: str) -> Dict:
+    if status == "win":
+        game_status = f"""You won!!!"""
+        game_status_db = "won"
+    elif status == "loose":
+        game_status = f"""Sorry you lost!
+                The word was: '{new_game_obj.game_word}'.
+                Do you want to play again?"""
+        game_status_db = "lost"
+    current_username = current_user.name
+    current_username_email = current_user.email
+    current_date = datetime.now()
+    current_time = datetime.now().strftime("%H:%M:%S")
+    game_word = new_game_obj.game_word
+    document = game_data_blueprint(
+        current_username,
+        current_username_email,
+        current_date,
+        current_time,
+        game_status_db,
+        game_word,
+    )
+    return document
 
 
 @bp.route("/game", methods=("GET", "POST"))
@@ -43,42 +87,12 @@ def start_game():
 
     if new_game_obj.game_over():
         if "_" not in selected_word:
-            game_status = f"""You won!!!"""
-            game_status_for_db = "won"
-            current_username = current_user.name
-            current_username_email = current_user.email
-            current_date = datetime.now()
-            curret_time = datetime.now().strftime("%H:%M:%S")
-            game_word = new_game_obj.game_word
-            document = {
-                "userame": current_username,
-                "user email": current_username_email,
-                "date": current_date,
-                "time": curret_time,
-                "game result": game_status_for_db,
-                "game word": game_word,
-            }
+            document = get_game_status_data("win")
             result = game_db.collection.insert_one(document)
             print(f"Inserted document with ID: {result.inserted_id}")
             not_used_letters = []
         else:
-            game_status = f"""Sorry you lost!
-                The word was: '{new_game_obj.game_word}'.
-                Do you want to play again?"""
-            game_status_for_db = "lost"
-            current_username = current_user.name
-            current_username_email = current_user.email
-            current_date = datetime.now()
-            curret_time = datetime.now().strftime("%H:%M:%S")
-            game_word = new_game_obj.game_word
-            document = {
-                "userame": current_username,
-                "user email": current_username_email,
-                "date": current_date,
-                "time": curret_time,
-                "game result": game_status_for_db,
-                "game word": game_word,
-            }
+            document = get_game_status_data("loose")
             result = game_db.collection.insert_one(document)
             print(f"Inserted document with ID: {result.inserted_id}")
             not_used_letters = []
