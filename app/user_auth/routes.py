@@ -4,6 +4,8 @@ from app.extensions import db
 from app.models.user_auth.user_auth import GameUser
 from app.models.mongo.mongo import MongoDB
 from app import game_db
+import datetime
+from typing import List, Dict
 
 
 from flask_bcrypt import Bcrypt
@@ -26,17 +28,44 @@ login_manager.login_view = "login"
 login_manager.login_message_category = "info"
 
 
-@login_manager.user_loader
-def load_user(user_id):
-    db.create_all()
-    return GameUser.query.get(int(user_id))
+# @login_manager.user_loader
+# def load_user(user_id):
+#     db.create_all()
+#     return GameUser.query.get(int(user_id))
+
+
+def get_todays_games(user: GameUser) -> List[Dict]:
+    todays_games = []
+    current_day_of_the_month = datetime.datetime.now().day
+    users_played_games = game_db.find_documents(
+        {
+            "user email": user.email,
+        },
+        {"_id": 0},
+    )
+    for game in users_played_games:
+        if game["date"].day == current_day_of_the_month:
+            todays_games.append(game)
+
+    return todays_games
 
 
 @bp.route("/")
 @login_required
 def index():
-    users = GameUser.query.all()
-    return render_template("user_auth/index.html", users=users)
+    current_user_email = current_user.email
+    user_from_db = GameUser.query.filter_by(email=current_user_email).first()
+    try:
+        todays_games_list = get_todays_games(user_from_db)
+        return render_template(
+            "index.html",
+            user_from_db=user_from_db,
+            todays_games_list=todays_games_list,
+        )
+    except:
+        return render_template(
+            "index.html", user=user_from_db, todays_games_list=todays_games_list
+        )
 
 
 from app.forms import forms

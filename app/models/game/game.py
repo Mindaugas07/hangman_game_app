@@ -1,7 +1,11 @@
 from random import choice
-from typing import Set
+from typing import Set, Dict
 import string
 from app.models.user_auth.user_auth import GameUser
+from app import game_db
+from dataclasses import dataclass
+import datetime
+
 
 list_of_words = [
     "lizards",
@@ -24,8 +28,8 @@ class HangmanGame:
     MAX_GUESSES = 6
     BAD_GUESSES = 0
 
-    def __init__(self, user: GameUser, used_letters: Set[str]) -> None:
-        self.used_letters = used_letters
+    def __init__(self) -> None:
+        self.used_letters = set()
         self.game_word = choice(list_of_words).strip()
 
     def player_input(self) -> str:
@@ -62,3 +66,29 @@ class HangmanGame:
         if set(self.game_word) <= self.used_letters:
             return True
         return False
+
+
+@dataclass
+class GameStats(HangmanGame):
+    user: GameUser
+
+    def get_games_played_by_the_user(self) -> Dict:
+        users_played_games = game_db.find_documents(
+            {
+                "user email": self.email,
+            },
+            {"_id": 0},
+        )
+        return users_played_games
+
+    def get_games_played_by_the_user_today(self) -> Dict:
+        todays_games = []
+        current_day_of_the_month = datetime.datetime.now().day
+        for game in self.games_played_by_the_user():
+            if game["date"].day == current_day_of_the_month:
+                todays_games.append(game)
+
+        return todays_games
+
+    def get_number_of_games_played_today(self) -> int:
+        return len(self.get_games_played_by_the_user_today())

@@ -11,14 +11,14 @@ from typing import Dict
 app = Flask(__name__)
 
 
-def game_data_blueprint(
-    current_username: str,
-    current_username_email: str,
-    current_date: datetime,
-    current_time: datetime,
-    game_status_db: str,
-    game_word: str,
-) -> Dict:
+def get_game_status_data(status: str, guesses_made: int) -> Dict:
+    """Status must be 'won' or 'lost'"""
+    game_status_db = status
+    current_username = current_user.name
+    current_username_email = current_user.email
+    current_date = datetime.now()
+    current_time = datetime.now().strftime("%H:%M:%S")
+    game_word = new_game_obj.game_word
     return {
         "userame": current_username,
         "user email": current_username_email,
@@ -26,32 +26,8 @@ def game_data_blueprint(
         "time": current_time,
         "game result": game_status_db,
         "game word": game_word,
+        "guesses made": guesses_made,
     }
-
-
-def get_game_status_data(status: str) -> Dict:
-    if status == "win":
-        game_status = f"""You won!!!"""
-        game_status_db = "won"
-    elif status == "loose":
-        game_status = f"""Sorry you lost!
-                The word was: '{new_game_obj.game_word}'.
-                Do you want to play again?"""
-        game_status_db = "lost"
-    current_username = current_user.name
-    current_username_email = current_user.email
-    current_date = datetime.now()
-    current_time = datetime.now().strftime("%H:%M:%S")
-    game_word = new_game_obj.game_word
-    document = game_data_blueprint(
-        current_username,
-        current_username_email,
-        current_date,
-        current_time,
-        game_status_db,
-        game_word,
-    )
-    return document
 
 
 @bp.route("/game", methods=("GET", "POST"))
@@ -61,7 +37,7 @@ def game():
     if request.method == "POST":
         global new_game_obj
         HangmanGame.BAD_GUESSES = 0
-        new_game_obj = HangmanGame(current_user.name, used_letters=set())
+        new_game_obj = HangmanGame()
         return redirect("start_game")
     else:
         return render_template("game/new_game.html")
@@ -86,13 +62,20 @@ def start_game():
     selected_word = new_game_obj.guessing_word()
 
     if new_game_obj.game_over():
+        guesses_made = HangmanGame.BAD_GUESSES
         if "_" not in selected_word:
-            document = get_game_status_data("win")
+            game_status = f"""Congratulations, you won!!!"""
+            print(f"You made {HangmanGame.BAD_GUESSES} bad quesses")
+            document = get_game_status_data("won", guesses_made)
             result = game_db.collection.insert_one(document)
             print(f"Inserted document with ID: {result.inserted_id}")
             not_used_letters = []
         else:
-            document = get_game_status_data("loose")
+            game_status = f"""Sorry you lost!
+                The word was: '{new_game_obj.game_word}'.
+                Do you want to play again?"""
+            print(f"You made {HangmanGame.BAD_GUESSES} bad quesses")
+            document = get_game_status_data("lost", guesses_made)
             result = game_db.collection.insert_one(document)
             print(f"Inserted document with ID: {result.inserted_id}")
             not_used_letters = []

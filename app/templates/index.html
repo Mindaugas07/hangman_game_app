@@ -2,8 +2,21 @@
 
 {% block content %}
 
-<h1>The Matrix!</h1>
+<h1>Welcome!</h1>
 
+<div class="content">
+    {%if todays_games_list%}
+    <h2>Games played today:</h2>
+    {% for game in todays_games_list %}
+    <p>On {{game["time"]}} the word was
+        '{{game["game word"]}}' and you {{game["game result"]}} the game. You made {{game["guesses made"]}} bad guesses.
+    </p>
+    {% endfor %}
+    {%else%}
+    <p>No games were played today.</p>
+    {%endif%}
+
+</div>
 
 
 
