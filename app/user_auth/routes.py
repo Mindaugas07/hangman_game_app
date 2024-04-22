@@ -6,6 +6,7 @@ from app.models.mongo.mongo import MongoDB
 from app import game_db
 import datetime
 from typing import List, Dict
+from app.main.routes import game_statistics
 
 
 from flask_bcrypt import Bcrypt
@@ -55,6 +56,7 @@ def get_todays_games(user: GameUser) -> List[Dict]:
 def index():
     current_user_email = current_user.email
     user_from_db = GameUser.query.filter_by(email=current_user_email).first()
+
     try:
         todays_games_list = get_todays_games(user_from_db)
         return render_template(
@@ -126,15 +128,20 @@ def logout():
 
 @bp.route("/<app_user>")
 def user_page(app_user):
+    user_from_db_two = GameUser.query.all()
+    game_stats = game_statistics(users=user_from_db_two)
+    print(game_stats)
     try:
         user_from_db = GameUser.query.filter_by(name=app_user).first()
         users_played_games = game_db.find_documents(
             {"user email": user_from_db.email}, {"_id": 0}
         )
+
         return render_template(
             "user_auth/user_page.html",
             user_from_db=user_from_db,
             games_data=users_played_games,
+            game_stats=game_stats,
         )
     except:
         print(f"User with username '{app_user}' doesn't exist!")

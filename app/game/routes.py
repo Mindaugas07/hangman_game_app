@@ -2,6 +2,7 @@ from flask import render_template, request, url_for, redirect, Flask
 from app.game import bp
 from app.extensions import db
 from app.models.game.game import HangmanGame
+from app.models.user_auth.user_auth import GameUser
 from flask_login import login_required, current_user
 import string
 from app import game_db
@@ -20,7 +21,7 @@ def get_game_status_data(status: str, guesses_made: int) -> Dict:
     current_time = datetime.now().strftime("%H:%M:%S")
     game_word = new_game_obj.game_word
     return {
-        "userame": current_username,
+        "username": current_username,
         "user email": current_username_email,
         "date": current_date,
         "time": current_time,
@@ -33,11 +34,14 @@ def get_game_status_data(status: str, guesses_made: int) -> Dict:
 @bp.route("/game", methods=("GET", "POST"))
 @login_required
 def game():
+    user_from_db = GameUser.query.filter_by(email=current_user.email).first()
 
     if request.method == "POST":
         global new_game_obj
         HangmanGame.BAD_GUESSES = 0
-        new_game_obj = HangmanGame()
+        new_game_obj = HangmanGame(user_from_db)
+        # new_game_obj_stats = GameStats(new_game_obj)
+        # print(new_game_obj_stats.get_games_played_by_the_user())
         return redirect("start_game")
     else:
         return render_template("game/new_game.html")

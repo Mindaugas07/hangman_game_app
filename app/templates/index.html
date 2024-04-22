@@ -9,7 +9,7 @@
     <h2>Games played today:</h2>
     {% for game in todays_games_list %}
     <p>On {{game["time"]}} the word was
-        '{{game["game word"]}}' and you {{game["game result"]}} the game. You made {{game["guesses made"]}} bad guesses.
+        '{{game["game word"]}}' and you {{game["game result"]}} the game with {{game["guesses made"]}} bad guesses.
     </p>
     {% endfor %}
     {%else%}

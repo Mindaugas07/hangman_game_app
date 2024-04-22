@@ -28,7 +28,8 @@ class HangmanGame:
     MAX_GUESSES = 6
     BAD_GUESSES = 0
 
-    def __init__(self) -> None:
+    def __init__(self, user: GameUser) -> None:
+        self.user = GameUser
         self.used_letters = set()
         self.game_word = choice(list_of_words).strip()
 
@@ -68,27 +69,28 @@ class HangmanGame:
         return False
 
 
-@dataclass
-class GameStats(HangmanGame):
-    user: GameUser
+# class GameStats(HangmanGame):
+#     def __init__(self, user: GameUser) -> None:
+#         super().__init__(GameUser)
 
-    def get_games_played_by_the_user(self) -> Dict:
-        users_played_games = game_db.find_documents(
-            {
-                "user email": self.email,
-            },
-            {"_id": 0},
-        )
-        return users_played_games
+#     def get_games_played_by_the_user(self) -> Dict:
+#         print(self.user["email"])
+#         users_played_games = game_db.find_documents(
+#             {
+#                 "user email": GameUser.email,
+#             },
+#             {"_id": 0},
+#         )
+#         return users_played_games
 
-    def get_games_played_by_the_user_today(self) -> Dict:
-        todays_games = []
-        current_day_of_the_month = datetime.datetime.now().day
-        for game in self.games_played_by_the_user():
-            if game["date"].day == current_day_of_the_month:
-                todays_games.append(game)
+#     def get_games_played_by_the_user_today(self) -> Dict:
+#         todays_games = []
+#         current_day_of_the_month = datetime.datetime.now().day
+#         for game in self.get_games_played_by_the_user():
+#             if game["date"].day == current_day_of_the_month:
+#                 todays_games.append(game)
 
-        return todays_games
+#         return todays_games
 
-    def get_number_of_games_played_today(self) -> int:
-        return len(self.get_games_played_by_the_user_today())
+#     def get_number_of_games_played_today(self) -> int:
+#         return len(self.get_games_played_by_the_user_today())

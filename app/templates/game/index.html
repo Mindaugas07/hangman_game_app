@@ -29,7 +29,12 @@
     <div class="form-group">
         <input type="submit" name="start game" value="Start a new game">
     </div>
+</form>
+<form role="form" action="{{current_user.name}}" method="GET">
+    <div>
+        <input type="submit" value="All time results">
+    </div>
+</form>
 
 
-
-    {% endblock %}
+{% endblock %}
