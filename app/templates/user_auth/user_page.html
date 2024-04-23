@@ -21,10 +21,10 @@
                     <th>Guesses made</th>
                 </tr>
                 <tr>
-                    <td>{{game_stats[user_from_db.name]}}</td>
-                    <td>6/3</td>
-                    <td>7</td>
-                    <td>45</td>
+                    <td>{{game_stats[user_from_db.name]["todays games"]}}</td>
+                    <td>{{game_stats[user_from_db.name]["wins"]}}</td>
+                    <td>{{game_stats[user_from_db.name]["losses"]}}</td>
+                    <td>{{game_stats[user_from_db.name]["today guesses"]}}</td>
                 </tr>
 
             </table>
@@ -38,13 +38,13 @@
             <h4>All played games:</h4>
             {% for game in games_data%}
             <p>On {{game["date"].date()}} {{game["time"]}} the word was
-                '{{game["game word"]}}' and player {{game["game result"]}} the game wit {{game["guesses made"]}} bad
+                '{{game["game word"]}}' and player {{game["game result"]}} the game with {{game["guesses made"]}} bad
                 guesses.
             </p>
 
             {% endfor %}
             {%elif user_from_db%}
-            <p> No games were played by the user.</p>
+            <p> No games were played by the user ever.</p>
             {%endif%}
         </div>
 

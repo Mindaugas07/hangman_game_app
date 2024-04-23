@@ -3,11 +3,10 @@ from app.main import bp
 from flask_login import LoginManager
 from app.models.user_auth.user_auth import GameUser
 from app import game_db
-from typing import Dict
-from datetime import datetime
+from typing import Dict, List
 
 
-def game_statistics(users: GameUser) -> Dict:
+def all_games_statistics(users: List[GameUser]) -> Dict:
     game_stats_dict = {}
     game_wins = game_db.query_equal("game result", "won", {"_id": 0})
     game_looses = game_db.query_equal("game result", "lost", {"_id": 0})
@@ -37,9 +36,10 @@ def game_statistics(users: GameUser) -> Dict:
             "wins": wins_by_user,
             "losses": looses_by_user,
             "total guesses": bad_guesses,
-            "today's day": datetime.now().day,
         }
-        print(game_stats_dict)
+    # sorted_obj = dict(game_stats_dict)
+    # sorted_obj[0] = sorted(game_stats_dict[0], key=lambda x: x["wins"], reverse=True)
+    # print(sorted_obj)
     return game_stats_dict
 
 
@@ -47,8 +47,9 @@ def game_statistics(users: GameUser) -> Dict:
 def home():
     try:
         users = GameUser.query.all()
-        game_wins = game_statistics(users=users)
+        game_wins = all_games_statistics(users=users)
     except:
+        # game_wins = all_games_statistics(users=users)
         status = "No users detected or no games were played!"
         print(status)
         return render_template("user_auth/index.html", status=status)

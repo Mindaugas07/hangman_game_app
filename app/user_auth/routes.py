@@ -6,7 +6,7 @@ from app.models.mongo.mongo import MongoDB
 from app import game_db
 import datetime
 from typing import List, Dict
-from app.main.routes import game_statistics
+from app.main.routes import all_games_statistics
 
 
 from flask_bcrypt import Bcrypt
@@ -29,12 +29,6 @@ login_manager.login_view = "login"
 login_manager.login_message_category = "info"
 
 
-# @login_manager.user_loader
-# def load_user(user_id):
-#     db.create_all()
-#     return GameUser.query.get(int(user_id))
-
-
 def get_todays_games(user: GameUser) -> List[Dict]:
     todays_games = []
     current_day_of_the_month = datetime.datetime.now().day
@@ -47,7 +41,6 @@ def get_todays_games(user: GameUser) -> List[Dict]:
     for game in users_played_games:
         if game["date"].day == current_day_of_the_month:
             todays_games.append(game)
-
     return todays_games
 
 
@@ -126,16 +119,47 @@ def logout():
     return redirect(url_for("main.home"))
 
 
+def todays_games_statistics(user: GameUser) -> Dict:
+    game_stats_dict = {}
+    game_wins = game_db.query_equal("game result", "won", {"_id": 0})
+    game_looses = game_db.query_equal("game result", "lost", {"_id": 0})
+    wins_by_user = 0
+    bad_guesses = 0
+    looses_by_user = 0
+    for game in game_wins:
+        if (
+            game["username"] == user.name
+            and game["date"].day == datetime.datetime.now().day
+        ):
+            wins_by_user += 1
+            bad_guesses += game["guesses made"]
+
+    for game in game_looses:
+        if (
+            game["username"] == user.name
+            and game["date"].day == datetime.datetime.now().day
+        ):
+            looses_by_user += 1
+            bad_guesses += 6
+
+    game_stats_dict[user.name] = {
+        "wins": wins_by_user,
+        "losses": looses_by_user,
+        "today guesses": bad_guesses,
+        "todays games": wins_by_user + looses_by_user,
+    }
+    return game_stats_dict
+
+
 @bp.route("/<app_user>")
 def user_page(app_user):
-    user_from_db_two = GameUser.query.all()
-    game_stats = game_statistics(users=user_from_db_two)
-    print(game_stats)
+
     try:
         user_from_db = GameUser.query.filter_by(name=app_user).first()
         users_played_games = game_db.find_documents(
             {"user email": user_from_db.email}, {"_id": 0}
         )
+        game_stats = todays_games_statistics(user=user_from_db)
 
         return render_template(
             "user_auth/user_page.html",

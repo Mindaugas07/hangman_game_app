@@ -11,7 +11,7 @@ from typing import Dict
 
 app = Flask(__name__)
 
-
+# serialized game status
 def get_game_status_data(status: str, guesses_made: int) -> Dict:
     """Status must be 'won' or 'lost'"""
     game_status_db = status
@@ -40,8 +40,7 @@ def game():
         global new_game_obj
         HangmanGame.BAD_GUESSES = 0
         new_game_obj = HangmanGame(user_from_db)
-        # new_game_obj_stats = GameStats(new_game_obj)
-        # print(new_game_obj_stats.get_games_played_by_the_user())
+        
         return redirect("start_game")
     else:
         return render_template("game/new_game.html")
