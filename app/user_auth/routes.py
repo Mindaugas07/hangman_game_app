@@ -6,7 +6,6 @@ from app.models.mongo.mongo import MongoDB
 from app import game_db
 import datetime
 from typing import List, Dict
-from app.main.routes import all_games_statistics
 
 
 from flask_bcrypt import Bcrypt

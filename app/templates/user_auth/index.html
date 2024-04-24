@@ -8,9 +8,10 @@
     {% for user in game_wins %}
     <p class="list-style">
     <ol>
-        <li><a href="/{{user}}">{{ user }}</a><a> - Correctly guessed the word {{ game_wins[user]["wins"] }} times,
-                incorectly - {{game_wins[user]["losses"]}}, and made
-                {{ game_wins[user]["total guesses"] }} total bad guesses</a></li>
+        <li><a href="/{{user[0]}}">{{ user[0] }}</a><a> - Correctly guessed the word {{ user[1] }}
+                times,
+                incorectly - {{user[2]}}, and made
+                {{ user[3] }} total bad guesses</a></li>
 
         <hr>
     </ol>
