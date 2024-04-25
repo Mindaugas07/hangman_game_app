@@ -20,7 +20,7 @@
     </div>
 
 </form>
-<h2>Letters you have used: {{guessed_letters}}</h2>
+<h2>Letters you have used: {% for letter in guessed_letters %}{{letter}}&nbsp{% endfor %}</h2>
 <img src={{game_picture}}>
 {% if game_status %}
 <h1>{{game_status}}</h1>
