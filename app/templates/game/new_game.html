@@ -4,11 +4,15 @@
 
 <h1>The hangman!</h1>
 
-<form role="form" action="/game" method="POST">
+<form role="form" action="/start_game" method="POST">
     <div class="form-group">
         <input type="submit" name="start game" value="Start a new game">
     </div>
+    <form role="form" action="/start_game" method="GET">
+        <div class="form-group">
+            <input type="submit" name="resume game" value="Resume a previous game">
+        </div>
 
 
 
-    {% endblock %}
+        {% endblock %}

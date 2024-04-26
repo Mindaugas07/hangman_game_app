@@ -16,90 +16,86 @@ app = Flask(__name__)
 # def game():
 
 #     if request.method == "POST":
-#         # global new_game_obj
-#         HangmanGame.BAD_GUESSES = 0
 #         new_game_obj = HangmanGame(current_user)
 #         print(new_game_obj)
+#         print(new_game_obj.obj_to_json())
 #         session["new_game_obj"] = new_game_obj.obj_to_json()
-#         # session["new_game_obj"] = new_game_obj
+#         print(session["new_game_obj"])
 
 #         return redirect("start_game")
-#     else:
-#         return render_template("game/new_game.html")
+#     elif request.method == "GET":
+#         return redirect("start_game")
 
 
 @bp.route("/start_game", methods=("GET", "POST"))
 @login_required
 def start_game():
-    # HangmanGame.BAD_GUESSES = 0
-    # new_game_obj = HangmanGame(current_user)
     json_dict = session.get("new_game_obj")
-    # print(session.get("new_game_obj"))
+    print(json_dict)
 
-    # print(used_letters)
-    if json_dict is None:
-        print("session nera")
-        HangmanGame.BAD_GUESSES = 0
-        new_game_obj = HangmanGame(current_user)
-        used_letters = string.ascii_lowercase
-
-        if request.method == "POST":
-            player_guess = request.form["letter"]
-            new_game_obj.used_letters.add(player_guess)
-            guessed_letters = new_game_obj.join_guessed_letters()
-            not_used_letters = new_game_obj.not_used_letters(guessed_letters)
-            if player_guess not in new_game_obj.game_word:
-                HangmanGame.BAD_GUESSES += 1
-
-        selected_word = new_game_obj.guessing_word()
-
-        if new_game_obj.game_over():
-            if "_" not in selected_word:
-                new_game_obj.insert_game_stats_to_mongo("won")
-
-            else:
-                new_game_obj.insert_game_stats_to_mongo("lost")
-        else:
-            HangmanGame.BAD_GUESSES = 0
-            new_game_obj = HangmanGame(current_user)
-
-    else:
+    if json_dict is not None:
         print("session yra")
-        used_letters = set(json_dict["used letters"])
-        new_game_obj = HangmanGame(
-            user=json_dict["username"],
-            game_status=None,
-            used_letters=set(json_dict["used letters"]),
-            game_word=json_dict["game word"],
+        print(json_dict["game word"])
+
+        new_game_obj = HangmanGame.obj_from_json(json_dict)
+        print(new_game_obj)
+        guessed_letters = set(json_dict["used letters"])
+
+        print(new_game_obj.used_letters)
+        not_used_letters = new_game_obj.not_used_letters(
+            guessed_letters=guessed_letters
         )
 
-        print(new_game_obj)
-        not_used_letters = new_game_obj.not_used_letters(used_letters)
-
         if request.method == "POST":
+            print("post yra")
+            print(new_game_obj.game_status)
             player_guess = request.form["letter"]
             new_game_obj.used_letters.add(player_guess)
             guessed_letters = new_game_obj.join_guessed_letters()
             not_used_letters = new_game_obj.not_used_letters(guessed_letters)
             if player_guess not in new_game_obj.game_word:
-                HangmanGame.BAD_GUESSES += 1
+                new_game_obj.bad_guesses += 1
 
         selected_word = new_game_obj.guessing_word()
+        print(new_game_obj.user)
+        print(new_game_obj.used_letters)
+        session["new_game_obj"] = new_game_obj.obj_to_json()
 
         if new_game_obj.game_over():
+
             if "_" not in selected_word:
                 new_game_obj.insert_game_stats_to_mongo("won")
+                not_used_letters = []
 
             else:
                 new_game_obj.insert_game_stats_to_mongo("lost")
-        else:
-            HangmanGame.BAD_GUESSES = 0
-            new_game_obj = HangmanGame(current_user)
+                not_used_letters = []
+            session.pop("new_game_obj")
+
+            # new_game_obj = HangmanGame(current_user)
+            # session["new_game_obj"] = new_game_obj.obj_to_json()
+    else:
+        print("session nera")
+        new_game_obj = HangmanGame(current_user)
+        new_game_obj.set_new_game_word()
+        guessed_letters = new_game_obj.used_letters
+        print(guessed_letters)
+
+        print(new_game_obj.used_letters)
+        not_used_letters = new_game_obj.not_used_letters(
+            guessed_letters=guessed_letters
+        )
+        print(not_used_letters)
+        selected_word = new_game_obj.guessing_word()
+        print(new_game_obj)
+        print(new_game_obj.obj_to_json())
+        session["new_game_obj"] = new_game_obj.obj_to_json()
+        print(session["new_game_obj"])
 
     return render_template(
         "game/index.html",
         guessed_letters=new_game_obj.used_letters,
-        game_picture="/static/game_images/hangman%d.png" % HangmanGame.BAD_GUESSES,
+        game_picture="/static/game_images/hangman%d.png" % new_game_obj.bad_guesses,
         selected_word=selected_word,
         not_used_letters=not_used_letters,
         game_status=new_game_obj.game_status,
