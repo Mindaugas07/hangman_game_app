@@ -20,16 +20,18 @@
     </div>
 
 </form>
+
 <h2>Letters you have used: {% for letter in guessed_letters %}{{letter}}&nbsp{% endfor %}</h2>
 <img src={{game_picture}}>
 {% if game_status %}
-<h1>{{game_status}}</h1>
-{% endif%}
-<form role="form" action="/start_game" method="POST">
+<span style="color: #ff0000">{{game_status}}</span>
+
+<form role="form" action="game" method="GET">
     <div class="form-group">
-        <input type="submit" name="start game" value="Start a new game">
+        <input type="submit" value="Start a new game">
     </div>
 </form>
+{% endif%}
 <form role="form" action="{{current_user.name}}" method="GET">
     <div>
         <input type="submit" value="All time results">

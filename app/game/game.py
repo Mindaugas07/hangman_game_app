@@ -5,27 +5,7 @@ from app.models.user_auth.user_auth import GameUser
 from app import game_db
 from datetime import datetime
 from flask_login import login_required, current_user
-
-
-list_of_words = [
-    "lizards",
-    "agreement",
-    "insurance",
-    "authority",
-    "ornament",
-    "beetle",
-    "grandfather",
-    "feeling",
-    "bassketball",
-    "invention",
-    "wine",
-    "cabbage",
-    "whistle",
-]
-
-game_word = choice(list_of_words).strip()
-used_letters = set()
-bad_guesses = 0
+from app.game.game_words import list_of_words
 
 
 class HangmanGame:
@@ -35,9 +15,9 @@ class HangmanGame:
         self,
         user,
         game_status=None,
-        used_letters=used_letters,
-        game_word=game_word,
-        bad_guesses=bad_guesses,
+        used_letters=set(),
+        game_word=choice(list_of_words).strip(),
+        bad_guesses=0,
     ) -> None:
         self.user = user
         self.game_status = None

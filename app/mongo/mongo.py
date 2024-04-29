@@ -7,17 +7,13 @@ from pymongo.errors import ConfigurationError, PyMongoError
 
 
 class MongoDB:
-    try:
 
-        def __init__(
-            self, host: str, port: int, db_name: str, collection_name: str
-        ) -> None:
-            self.client = MongoClient(host, port)
-            self.db = self.client[db_name]
-            self.collection = self.db[collection_name]
-
-    except ConfigurationError as e:
-        print("Configuration error:", str(e))
+    def __init__(
+        self, host: str, port: int, db_name: str, collection_name: str
+    ) -> None:
+        self.client = MongoClient(host, port)
+        self.db = self.client[db_name]
+        self.collection = self.db[collection_name]
 
     def find_documents(self, query: Dict, columns: Dict) -> List[Dict]:
         documents = self.collection.find(query, columns)
