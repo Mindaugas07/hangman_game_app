@@ -5,18 +5,21 @@
 <div class="content">
     {% if not status%}
     <h2>Highest scorers:</h2>
-    {% for user in game_wins %}
     <p class="list-style">
     <ol>
-        <li><a href="/{{user[0]}}">{{ user[0] }}</a><a> - Correctly guessed the word {{ user[1] }}
+        {% for user in game_wins %}
+
+        <li><a href="/user/{{user[0]}}">{{ user[0] }}</a><a> - Correctly guessed the word {{ user[1] }}
                 times,
                 incorectly - {{user[2]}}, and made
-                {{ user[3] }} total bad guesses</a></li>
+                {{ user[3] }} total bad guesses</a>
+        </li>
 
         <hr>
+
+        {% endfor %}
     </ol>
     </p>
-    {% endfor %}
     {%else%}
     <h2>No users detected or no games were played!</h2>
     {%endif%}

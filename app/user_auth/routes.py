@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request, Flask
+from flask import render_template, redirect, url_for, flash, request, Flask, abort
 from app.user_auth import bp
 from app.extensions import db
 from app.models.user_auth.user_auth import GameUser
@@ -9,6 +9,7 @@ from typing import List, Dict
 from app.helper_functions.helper_functions import (
     get_todays_games,
     todays_games_statistics,
+    get_user_all_time_statistics,
 )
 
 
@@ -39,8 +40,8 @@ def index():
     user_from_db = GameUser.query.filter_by(email=current_user_email).first()
 
     try:
-        print("bandom")
-        todays_games_list = get_todays_games(user_from_db)
+        todays_games_list = get_todays_games(user_from_db)[:10]
+
         return render_template(
             "index.html",
             user_from_db=user_from_db,
@@ -111,25 +112,24 @@ def logout():
     return redirect(url_for("main.home"))
 
 
-@bp.route("/<app_user>")
+@bp.route("/user/<app_user>")
 def user_page(app_user):
 
     try:
         user_from_db = GameUser.query.filter_by(name=app_user).first()
-        users_played_games = game_db.find_documents(
-            {"user email": user_from_db.email}, {"_id": 0}
-        )
-        game_stats = todays_games_statistics(user=user_from_db)
+        users_all_played_games_stats = get_user_all_time_statistics(user_from_db)
+        todays_game_stats = todays_games_statistics(user=user_from_db)
 
         return render_template(
             "user_auth/user_page.html",
             user_from_db=user_from_db,
-            games_data=users_played_games,
-            game_stats=game_stats,
+            games_data=users_all_played_games_stats[:10],
+            game_stats=todays_game_stats,
         )
-    except:
-        print(f"User with username '{app_user}' doesn't exist!")
-        return render_template(
-            "user_auth/user_page.html",
-            not_existing_user=app_user,
-        )
+    except Exception:
+        abort(404)
+        # print(f"User with username '{app_user}' doesn't exist!")
+        # return render_template(
+        #     "user_auth/user_page.html",
+        #     not_existing_user=app_user,
+        # )

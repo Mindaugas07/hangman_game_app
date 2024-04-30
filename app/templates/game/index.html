@@ -4,15 +4,12 @@
 
 <h1>Hey {{current_user.name}}, lets play a game!</h1>
 <h2>Your word is: {{selected_word}}</h2>
-<h2>Guess a letter: </h2>
+
 
 <form role="form" action="" method="POST">
     <div class="form-group">
-        {% if not not_used_letters%}
-        {% for letter in not_used_letters_two%}
-        <input type="submit" name="letter" value={{letter}}>
-        {% endfor %}
-        {%else%}
+        {% if not_used_letters%}
+        <h2>Guess a letter: </h2>
         {% for letter in not_used_letters%}
         <input type="submit" name="letter" value={{letter}}>
         {% endfor %}
@@ -23,8 +20,10 @@
 
 <h2>Letters you have used: {% for letter in guessed_letters %}{{letter}}&nbsp{% endfor %}</h2>
 <img src={{game_picture}}>
+
+
 {% if game_status %}
-<span style="color: #ff0000">{{game_status}}</span>
+<span style="font-size: 1.4rem; color: #6d08b5">{{game_status}}</span>
 
 <form role="form" action="game" method="GET">
     <div class="form-group">
@@ -32,7 +31,7 @@
     </div>
 </form>
 {% endif%}
-<form role="form" action="{{current_user.name}}" method="GET">
+<form role="form" action="/user/{{current_user.name}}" method="GET">
     <div>
         <input type="submit" value="All time results">
     </div>

@@ -5,18 +5,33 @@ from app.models.user_auth.user_auth import GameUser
 from app import game_db
 from datetime import datetime
 from flask_login import login_required, current_user
-from app.game.game_words import list_of_words
+
+list_of_words = [
+    "lizards",
+    "agreement",
+    "insurance",
+    "authority",
+    "ornament",
+    "beetle",
+    "grandfather",
+    "feeling",
+    "bassketball",
+    "invention",
+    "wine",
+    "cabbage",
+    "whistle",
+]
 
 
 class HangmanGame:
-    MAX_GUESSES = 6
+    MAX_GUESSES = 10
 
     def __init__(
         self,
         user,
         game_status=None,
         used_letters=set(),
-        game_word=choice(list_of_words).strip(),
+        game_word=choice(list_of_words),
         bad_guesses=0,
     ) -> None:
         self.user = user
@@ -104,37 +119,10 @@ class HangmanGame:
         cls.used_letters = set(json_obj["used letters"])
         cls.game_word = json_obj["game word"]
         cls.bad_guesses = json_obj["bad guesses"]
-        # return user, used_letters, game_word, HangmanGame.BAD_GUESSES
+
         return HangmanGame(
             user=cls.user,
             used_letters=cls.used_letters,
             game_word=cls.game_word,
             bad_guesses=cls.bad_guesses,
         )
-
-
-# class GameStats(HangmanGame):
-#     def __init__(self, user: GameUser) -> None:
-#         super().__init__(GameUser)
-
-#     def get_games_played_by_the_user(self) -> Dict:
-#         print(self.user["email"])
-#         users_played_games = game_db.find_documents(
-#             {
-#                 "user email": GameUser.email,
-#             },
-#             {"_id": 0},
-#         )
-#         return users_played_games
-
-#     def get_games_played_by_the_user_today(self) -> Dict:
-#         todays_games = []
-#         current_day_of_the_month = datetime.datetime.now().day
-#         for game in self.get_games_played_by_the_user():
-#             if game["date"].day == current_day_of_the_month:
-#                 todays_games.append(game)
-
-#         return todays_games
-
-#     def get_number_of_games_played_today(self) -> int:
-#         return len(self.get_games_played_by_the_user_today())

@@ -10,7 +10,7 @@ from app.helper_functions.helper_functions import all_games_statistics_dict
 def home():
     try:
         users = GameUser.query.all()
-        game_wins = all_games_statistics_dict(users=users)
+        game_wins = all_games_statistics_dict(users=users)[:10]
     except:
         status = "No users detected or no games were played!"
         print(status)
