@@ -2,11 +2,12 @@
 
 {% block content %}
 
-<h1>Welcome!</h1>
+<h1>Welcome {{user.name}}</h1>
 
 <div class="content">
     {%if todays_games_list%}
     <h2>Games played today:</h2>
+    <br />
     {% for game in todays_games_list %}
     <p>On {{game["time"]}} the word was
         '{{game["game word"]}}' and you {{game["game result"]}} the game with {{game["guesses made"]}} bad guesses.
@@ -17,6 +18,7 @@
     {%endif%}
 
 </div>
+
 
 
 

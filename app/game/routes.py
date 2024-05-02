@@ -59,6 +59,7 @@ def start_game():
             session.pop("new_game_obj")
 
     try:
+        print("tryinaaaa")
         return render_template(
             "game/index.html",
             guessed_letters=new_game_obj.used_letters,
@@ -67,5 +68,7 @@ def start_game():
             not_used_letters=not_used_letters,
             game_status=new_game_obj.game_status,
         )
-    except Exception:
+    except Exception as e:
+        print(e)
+
         abort(404)

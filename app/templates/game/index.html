@@ -1,8 +1,11 @@
 {% extends "base.html" %}
 
+
+
 {% block content %}
 
-<h1>Hey {{current_user.name}}, lets play a game!</h1>
+
+<h2>The hangman game</h2>
 <h2>Your word is: {{selected_word}}</h2>
 
 
@@ -13,29 +16,42 @@
         {% for letter in not_used_letters%}
         <input type="submit" name="letter" value={{letter}}>
         {% endfor %}
+        {%else%}
+        <br /><br />
         {%endif%}
     </div>
 
 </form>
+<br />
 
 <h2>Letters you have used: {% for letter in guessed_letters %}{{letter}}&nbsp{% endfor %}</h2>
+<br />
 <img src={{game_picture}}>
+<br />
+
+<div class="typewriter">
+    {% if game_status %}
+
+    <h5>{{game_status}}</h5>
+</div>
+<br />
 
 
-{% if game_status %}
-<span style="font-size: 1.4rem; color: #6d08b5">{{game_status}}</span>
 
 <form role="form" action="game" method="GET">
     <div class="form-group">
-        <input type="submit" value="Start a new game">
+        <input type="submit" value="Play again">
     </div>
 </form>
 {% endif%}
-<form role="form" action="/user/{{current_user.name}}" method="GET">
+<br />
+<form role="form" action="/profile/{{current_user.name}}" method="GET">
     <div>
-        <input type="submit" value="All time results">
+        <input type="submit" value="User's statistics">
     </div>
 </form>
+
+
 
 
 {% endblock %}

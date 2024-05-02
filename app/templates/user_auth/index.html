@@ -9,7 +9,7 @@
     <ol>
         {% for user in game_wins %}
 
-        <li><a href="/user/{{user[0]}}">{{ user[0] }}</a><a> - Correctly guessed the word {{ user[1] }}
+        <li><a href="/profile/{{user[0]}}">{{ user[0] }}</a><a> - Correctly guessed the word {{ user[1] }}
                 times,
                 incorectly - {{user[2]}}, and made
                 {{ user[3] }} total bad guesses</a>

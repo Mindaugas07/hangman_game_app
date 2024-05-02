@@ -1,11 +1,8 @@
 from flask import Flask
 from app.mongo.mongo import MongoDB
-
 from config import Config
 from app.extensions import db
 from app.models.user_auth.user_auth import GameUser
-from flask_bcrypt import Bcrypt
-from flask_mail import Mail
 from flask_login import LoginManager
 
 
@@ -40,6 +37,10 @@ def create_app(config_class=Config):
     from app.game import bp as game_bp
 
     app.register_blueprint(game_bp)
+
+    from app.errors import bp as errors_bp
+
+    app.register_blueprint(errors_bp)
 
     login_manager = LoginManager(app)
     login_manager.login_view = "user_auth.login"

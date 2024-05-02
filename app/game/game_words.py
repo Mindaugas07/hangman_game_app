@@ -12,4 +12,8 @@ list_of_words = [
     "wine",
     "cabbage",
     "whistle",
+    "dolphinarium",
+    "cactus",
+    "penguin"
+
 ]

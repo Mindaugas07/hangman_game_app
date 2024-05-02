@@ -1,3 +1,4 @@
+from app.game.game_words import list_of_words
 from random import choice
 from typing import Set, Dict
 import string, json
@@ -5,22 +6,6 @@ from app.models.user_auth.user_auth import GameUser
 from app import game_db
 from datetime import datetime
 from flask_login import login_required, current_user
-
-list_of_words = [
-    "lizards",
-    "agreement",
-    "insurance",
-    "authority",
-    "ornament",
-    "beetle",
-    "grandfather",
-    "feeling",
-    "bassketball",
-    "invention",
-    "wine",
-    "cabbage",
-    "whistle",
-]
 
 
 class HangmanGame:

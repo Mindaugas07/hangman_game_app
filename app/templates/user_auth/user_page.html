@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 
+
+
 {% block content %}
+
 
 
 <div class="container">
@@ -13,12 +16,12 @@
 
             <br /><br />
 
-            <table>
+            <table border="5" cellpadding="5">
                 <tr>
-                    <th>Games today</th>
-                    <th>Games won</th>
-                    <th>Games lost</th>
-                    <th>Total bad guesses made</th>
+                    <th style="background-color: #33cccc;">Games today</th>
+                    <th style="background-color: #33cccc;">Games won</th>
+                    <th style="background-color: #33cccc;">Games lost</th>
+                    <th style="background-color: #33cccc;">Total bad guesses made today</th>
                 </tr>
                 <tr>
                     <td>{{game_stats[user_from_db.name]["todays games"]}}</td>
@@ -28,14 +31,30 @@
                 </tr>
 
             </table>
+            <table border="5" cellpadding="5">
+                <tr>
+                    <th style="background-color: #fddb5d;">Total games won</th>
+                    <th style="background-color: #fddb5d;">Total games lost</th>
+                    <th style="background-color: #fddb5d;">Total games</th>
+                    <th style="background-color: #fddb5d;">Total bad guesses made</th>
+                </tr>
+                <tr>
+                    <td>{{user_all_time_stat[0][1]}}</td>
+                    <td>{{user_all_time_stat[0][2]}}</td>
+                    <td>{{user_all_time_stat[0][1]+user_all_time_stat[0][2]}}</td>
+                    <td>{{user_all_time_stat[0][3]}}</td>
+                </tr>
+
+            </table>
+            {%else%}
+            <p>User with username '{{not_existing_user}}' doesn't exist!</p>
+            {%endif%}
         </div>
-        {%else%}
-        <p>User with username '{{not_existing_user}}' doesn't exist!</p>
-        {%endif%}
+
 
         <div class="col-lg-6">
             {% if games_data%}
-            <h4>All played games:</h4>
+            <h4>10 last games:</h4>
             {% for game in games_data%}
             <p>On {{game["date"].date()}} {{game["time"]}} the word was
                 '{{game["game word"]}}' and player {{game["game result"]}} the game with {{game["guesses made"]}} bad

@@ -3,3 +3,5 @@ __pycache__
 config.py
 app.db
 app/static
+data.log
+flask.log

@@ -10,7 +10,11 @@ from app.helper_functions.helper_functions import (
     get_todays_games,
     todays_games_statistics,
     get_user_all_time_statistics,
+    all_games_statistics_dict,
 )
+
+
+from app.logging.logging_config import dictConfig
 
 
 from flask_bcrypt import Bcrypt
@@ -47,7 +51,11 @@ def index():
             user_from_db=user_from_db,
             todays_games_list=todays_games_list,
         )
-    except:
+    except Exception as exception_message:
+        app.logger.fatal(
+            f" error {exception_message} was received while today's user's data did not load! "
+        )
+
         return render_template("index.html", user=user_from_db)
 
 
@@ -112,24 +120,26 @@ def logout():
     return redirect(url_for("main.home"))
 
 
-@bp.route("/user/<app_user>")
+@bp.route("/profile/<app_user>")
 def user_page(app_user):
-
     try:
         user_from_db = GameUser.query.filter_by(name=app_user).first()
         users_all_played_games_stats = get_user_all_time_statistics(user_from_db)
         todays_game_stats = todays_games_statistics(user=user_from_db)
+        user_all_time_stat = all_games_statistics_dict([user_from_db])
 
         return render_template(
             "user_auth/user_page.html",
             user_from_db=user_from_db,
             games_data=users_all_played_games_stats[:10],
             game_stats=todays_game_stats,
+            user_all_time_stat=user_all_time_stat,
         )
-    except Exception:
-        abort(404)
-        # print(f"User with username '{app_user}' doesn't exist!")
-        # return render_template(
-        #     "user_auth/user_page.html",
-        #     not_existing_user=app_user,
-        # )
+    except Exception as e:
+        print(e)
+        #     abort(404)
+        print(f"User with username '{app_user}' doesn't exist!")
+        return render_template(
+            "user_auth/user_page.html",
+            not_existing_user=app_user,
+        )
