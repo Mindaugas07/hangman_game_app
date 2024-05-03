@@ -51,10 +51,11 @@ def todays_games_statistics(user: GameUser) -> Dict:
         "today guesses": bad_guesses,
         "todays games": wins_by_user + looses_by_user,
     }
+
     return game_stats_dict
 
 
-def get_user_all_time_statistics(user: GameUser) -> Dict:
+def get_user_all_time_statistics(user: GameUser) -> List[Dict]:
     users_all_played_games = game_db.find_documents(
         {"user email": user.email}, {"_id": 0}
     )
@@ -64,7 +65,7 @@ def get_user_all_time_statistics(user: GameUser) -> Dict:
     return users_all_played_games_sorted_by_time
 
 
-def all_games_statistics_dict(users: List[GameUser]) -> Dict:
+def all_games_statistics_dict(users: List[GameUser]) -> List[List]:
     game_stats_dict = {}
     games = game_db.query_not_equal("game result", "draw", {"_id": 0})
     for user in users:
@@ -105,5 +106,5 @@ def all_games_statistics_list_sorted(game_stats_dict: Dict[str, Dict]) -> List[L
     sorted_game_stats_list = sorted(
         game_stats_list, key=lambda x: (x[1], -x[2], -x[3]), reverse=True
     )
-
+    print(sorted_game_stats_list)
     return sorted_game_stats_list

@@ -16,6 +16,9 @@ from app.helper_functions.helper_functions import (
 
 from app.logging.logging_config import dictConfig
 
+from playsound import playsound
+from tkinter import *
+
 
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail
@@ -37,26 +40,45 @@ login_manager.login_view = "login"
 login_manager.login_message_category = "info"
 
 
+@bp.route("/500")
+def error500():
+    abort(500)
+
+
+@bp.route("/<bad_url>")
+def error404(bad_url):
+    abort(404)
+
+
+@bp.errorhandler(404)
+@login_required
+def page_not_found(error):
+    return render_template("errors/404.html"), 404
+
+
+@bp.errorhandler(500)
+def internal_error(error):
+    return render_template("errors/500.html"), 500
+
+
 @bp.route("/")
 @login_required
 def index():
-    current_user_email = current_user.email
-    user_from_db = GameUser.query.filter_by(email=current_user_email).first()
-
     try:
+        current_user_email = current_user.email
+        user_from_db = GameUser.query.filter_by(email=current_user_email).first()
         todays_games_list = get_todays_games(user_from_db)[:10]
 
         return render_template(
             "index.html",
-            user_from_db=user_from_db,
+            user=user_from_db,
             todays_games_list=todays_games_list,
         )
-    except Exception as exception_message:
-        app.logger.fatal(
-            f" error {exception_message} was received while today's user's data did not load! "
+    except Exception as exception:
+        app.logger.error(
+            f" error: {exception} was received while today's user's data did not load in route user_auth.index! "
         )
-
-        return render_template("index.html", user=user_from_db)
+        return render_template("index.html")
 
 
 from app.forms import forms
@@ -135,10 +157,10 @@ def user_page(app_user):
             game_stats=todays_game_stats,
             user_all_time_stat=user_all_time_stat,
         )
-    except Exception as e:
-        print(e)
-        #     abort(404)
-        print(f"User with username '{app_user}' doesn't exist!")
+    except Exception as exception:
+        app.logger.error(
+            f" error: {exception} was received while non exsistant user's '{app_user}' profile data did not load in route 'user_auth.user_page'! "
+        )
         return render_template(
             "user_auth/user_page.html",
             not_existing_user=app_user,

@@ -1,4 +1,3 @@
-
 from logging.config import dictConfig
 
 dictConfig(
@@ -21,6 +20,7 @@ dictConfig(
                 # "backupCount": 5,
                 "filename": "flask.log",
                 "formatter": "default",
+                "level": "ERROR",
             },
         },
         "root": {"level": "ERROR", "handlers": ["console", "file"]},

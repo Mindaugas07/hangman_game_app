@@ -38,10 +38,6 @@ def create_app(config_class=Config):
 
     app.register_blueprint(game_bp)
 
-    from app.errors import bp as errors_bp
-
-    app.register_blueprint(errors_bp)
-
     login_manager = LoginManager(app)
     login_manager.login_view = "user_auth.login"
     login_manager.login_message_category = "info"
