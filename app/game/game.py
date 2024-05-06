@@ -59,17 +59,12 @@ class HangmanGame:
     def game_over(self):
         if self.bad_guesses == self.MAX_GUESSES:
             return True
-        if set(self.game_word) <= self.used_letters:
-            return True
         return False
 
-    def insert_game_stats_to_mongo(self, game_outcome: str) -> list:
+    def insert_game_stats_to_mongo(self, game_outcome: str) -> None:
         self.set_game_status(game_outcome)
-        # print(f"You made {self.bad_guesses} bad quesses")
         document = self.serialized_game_stats(game_outcome, self.bad_guesses)
-        result = game_db.collection.insert_one(document)
-        # print(f"Inserted document with ID: {result.inserted_id}")
-        self.set_game_status(game_outcome)
+        game_db.collection.insert_one(document)
 
     def serialized_game_stats(self, status: str, guesses_made: int) -> Dict:
         """Status must be 'won' or 'lost'"""

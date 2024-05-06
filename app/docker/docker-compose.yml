@@ -3,7 +3,7 @@ services:
   web:
     build: ./app
     ports:
-      - 5000:5000
+      - 27017:27017
     depends_on:
       - mongo
   mongo:
