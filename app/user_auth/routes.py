@@ -2,10 +2,6 @@ from flask import render_template, redirect, url_for, flash, request, Flask, abo
 from app.user_auth import bp
 from app.extensions import db
 from app.models.user_auth.user_auth import GameUser
-from app.mongo.mongo import MongoDB
-from app import game_db
-import datetime
-from typing import List, Dict
 from app.helper_functions.helper_functions import (
     get_todays_games,
     todays_games_statistics,
@@ -16,7 +12,6 @@ from app.helper_functions.helper_functions import (
 
 from app.logging.logging_config import dictConfig
 
-from playsound import playsound
 from tkinter import *
 
 

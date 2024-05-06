@@ -1,9 +1,5 @@
-import datetime, os
-from random import randint
 from pymongo import MongoClient
-from pymongo.collection import Collection
 from typing import Dict, List, Union
-from pymongo.errors import ConfigurationError, PyMongoError
 
 
 class MongoDB:

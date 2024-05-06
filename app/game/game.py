@@ -1,15 +1,14 @@
 from app.game.game_words import list_of_words
 from random import choice
-from typing import Set, Dict
-import string, json
-from app.models.user_auth.user_auth import GameUser
+from typing import Dict
+import string
 from app import game_db
 from datetime import datetime
-from flask_login import login_required, current_user
+from flask_login import current_user
 
 
 class HangmanGame:
-    MAX_GUESSES = 10
+    MAX_GUESSES = 6
 
     def __init__(
         self,
@@ -66,10 +65,10 @@ class HangmanGame:
 
     def insert_game_stats_to_mongo(self, game_outcome: str) -> list:
         self.set_game_status(game_outcome)
-        print(f"You made {self.bad_guesses} bad quesses")
+        # print(f"You made {self.bad_guesses} bad quesses")
         document = self.serialized_game_stats(game_outcome, self.bad_guesses)
         result = game_db.collection.insert_one(document)
-        print(f"Inserted document with ID: {result.inserted_id}")
+        # print(f"Inserted document with ID: {result.inserted_id}")
         self.set_game_status(game_outcome)
 
     def serialized_game_stats(self, status: str, guesses_made: int) -> Dict:

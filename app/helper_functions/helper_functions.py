@@ -106,5 +106,5 @@ def all_games_statistics_list_sorted(game_stats_dict: Dict[str, Dict]) -> List[L
     sorted_game_stats_list = sorted(
         game_stats_list, key=lambda x: (x[1], -x[2], -x[3]), reverse=True
     )
-    print(sorted_game_stats_list)
+
     return sorted_game_stats_list

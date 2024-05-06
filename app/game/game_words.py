@@ -14,6 +14,6 @@ list_of_words = [
     "whistle",
     "dolphinarium",
     "cactus",
-    "penguin"
-
+    "penguin",
+    "potato",
 ]

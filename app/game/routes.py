@@ -1,9 +1,8 @@
-from flask import render_template, request, redirect, Flask, session, url_for, abort
+from flask import render_template, request, redirect, Flask, session, url_for
 from app.game import bp
 from app.sound.sound import success_sound, incorect_sound
 
 from app.game.game import HangmanGame
-from app.models.user_auth.user_auth import GameUser
 from flask_login import login_required, current_user
 
 
@@ -29,7 +28,6 @@ def start_game():
     json_dict = session.get("new_game_obj")
 
     if json_dict is not None:
-        print(json_dict["game word"])
 
         new_game_obj = HangmanGame.obj_from_json(json_dict)
         guessed_letters = set(json_dict["used letters"])
