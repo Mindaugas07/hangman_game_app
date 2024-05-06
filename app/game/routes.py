@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, Flask, session, url_for, abort
 from app.game import bp
-from playsound import playsound
+from app.sound.sound import success_sound, incorect_sound
 
 from app.game.game import HangmanGame
 from app.models.user_auth.user_auth import GameUser
@@ -43,10 +43,10 @@ def start_game():
             guessed_letters = new_game_obj.join_guessed_letters()
             not_used_letters = new_game_obj.not_used_letters(guessed_letters)
             if player_guess not in new_game_obj.game_word:
-                playsound("app/static/sounds/wrong.mp3")
+                incorect_sound()
                 new_game_obj.bad_guesses += 1
             else:
-                playsound("app/static/sounds/correct.mp3")
+                success_sound()
 
         selected_word = new_game_obj.guessing_word()
         session["new_game_obj"] = new_game_obj.obj_to_json()
